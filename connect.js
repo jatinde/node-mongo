@@ -8,7 +8,7 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', { useNewUrlParser: true
     const db = client.db('TodoApp')
 
     
-    /* db.collection('Todos').insertOne({
+    db.collection('Todos').insertOne({
         text: 'Task to do',
         completed: false
     }, (err, result) => {
@@ -17,10 +17,10 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', { useNewUrlParser: true
          } 
          console.log(JSON.stringify(result.ops, undefined, 2));
          
-    }) */
+    }) 
 
     db.collection('Users').insertOne({
-        name: 'Jay Sean',
+        name: 'John Doe',
         age: 34,
         location: "Mohali Punjb, 160062"
     }, (err, result) => {

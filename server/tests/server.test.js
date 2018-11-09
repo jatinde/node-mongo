@@ -1,12 +1,15 @@
 const expect = require('expect');
 const request = require('supertest');
+const { ObjectId } = require('mongodb')
 
 const { app } = require('../server')
 const {Todo} = require('../models/todo')
 
 const todos = [{
+    _id: new ObjectId(),
     text: "First todo."
 }, {
+    _id: new ObjectId(),
     text: "Second todo."
 }]
 
@@ -64,6 +67,48 @@ describe('Post /todos', () => {
             .expect(200)
             .expect(res => {
                 expect(res.body.todos.length).toBe(2)
+            })
+            .end(done)
+        })
+    })
+
+    describe('GET /todos/id', () => {
+        it('should get valid todo.', (done) => {
+            request(app)
+            .get(`/todos/${todos[0]._id.toHexString()}`)
+            .expect(200)
+            .expect(res => {
+                expect(res.body.todo.text).toBe(todos[0].text).toBeA('string')
+            })
+            .end(done)
+        })
+
+        it('should get valid todo.', (done) => {
+            request(app)
+            .get(`/todos/${todos[0]._id.toHexString()}`)
+            .expect(200)
+            .expect(res => {
+                expect(res.body.todo.text).toBe(todos[0].text).toBeA('string')
+            })
+            .end(done)
+        })
+
+        it('should return 404 if todo not found.', (done) => {
+            request(app)
+            .get(`/todos/${new ObjectId()}`)
+            .expect(404)
+            .expect(res => {
+                expect(res.body.status).toBe('NOT_FOND').toBeA('string')
+            })
+            .end(done)
+        })
+
+        it('should return BAD_Request (404) if id invalid.', (done) => {
+            request(app)
+            .get(`/todos/${new ObjectId().toHexString+'45'}`)
+            .expect(400)
+            .expect(res => {
+                expect(res.body.status).toBe('BAD_REQUEST').toBeA('string')
             })
             .end(done)
         })

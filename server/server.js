@@ -49,7 +49,7 @@ app.get('/todos/:id', (req, res) => {
                     message: `Todo not found for id: ${id}`
                 });
             }
-            res.send(todo)
+            res.send({todo})
         })
 })
 

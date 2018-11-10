@@ -6,7 +6,6 @@ const authenticate = (req, res, next) => {
 
     User.findByToken(token)
         .then(user => {
-            debugger
             if(!user) {
                 return Promise.reject()
             }

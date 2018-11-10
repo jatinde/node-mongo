@@ -118,7 +118,6 @@ app.post('/users', (req, res) => {
 })
 
 app.get('/users/me', authenticate, (req, res) => {
-    debugger;
     res.send(req.user);
 })
 

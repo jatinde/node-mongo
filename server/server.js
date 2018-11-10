@@ -1,3 +1,4 @@
+const {env} = require('./config/config')
 const _ = require('lodash')
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -8,7 +9,7 @@ const {Todo} = require('./models/todo');
 const {User} = require('./models/user');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
@@ -93,7 +94,7 @@ app.patch('/todos/:id', (req, res) => {
         body.completedAt = null;
     }
     Todo.findByIdAndUpdate(id, {$set: body}, { new: true})
-        .then(todo => {
+        .then(todo => { 
             if(!todo){
                 return res.status(404).send({
                     status: 'NOT_FOND',
@@ -104,10 +105,22 @@ app.patch('/todos/:id', (req, res) => {
         })
 })
 
+//User Routes
+
+app.post('/users', (req, res) => {
+    debugger;
+    const body = _.pick(req.body, ['email', 'password']);
+
+    const user = new User(body);
+    user.save().then(() =>  user.generateAuthToken())
+    .then(token =>  res.header('x-auth', token).send(user))
+    .catch(e => res.status(400).send(e))
+})
+
 app.listen(port, () => {
-    console.log('====================================');
-    console.log("Web Server started at Port:", port);
-    console.log('====================================');
+    console.log('============================================================');
+    console.log("Web Server started at Port:", port, "running at:", env);
+    console.log('============================================================');
 });
 
 module.exports = { app }
